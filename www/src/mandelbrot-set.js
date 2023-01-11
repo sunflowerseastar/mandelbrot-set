@@ -1,8 +1,6 @@
 import { Universe } from "wasm-mandelbrot-set";
 import { memory } from "wasm-mandelbrot-set/wasm_mandelbrot_set_bg";
 
-const CELL_SIZE = 1; // px
-
 // Construct the universe, and get its width and height.
 
 const canvas = document.getElementById("canvas");
@@ -13,7 +11,28 @@ const height = canvas.clientHeight;
 canvas.width = width;
 canvas.height = height;
 
-const universe = Universe.new(width, height);
+const boundingBox1 = [
+  [-2.0, -1.12],
+  [0.47, 1.12],
+];
+const boundingBox2 = [
+  [-0.8, 0.0],
+  [-0.6, 0.2],
+];
+const [[bxMin, byMin], [bxMax, byMax]] = boundingBox1;
+const iterations = 255;
+
+const universe = Universe.new(
+  width,
+  height,
+  iterations,
+  bxMin,
+  byMin,
+  bxMax,
+  byMax
+);
+
+const CELL_SIZE = 1; // px
 
 const getIndex = (row, column) => {
   return row * width + column;
@@ -28,8 +47,9 @@ const drawCells = () => {
   for (let row = 0; row < height; row++) {
     for (let col = 0; col < width; col++) {
       const idx = getIndex(row, col);
+      // console.log(cells[idx]);
 
-      ctx.fillStyle = `rgba(0, 0, 0, ${cells[idx] / 128})`;
+      ctx.fillStyle = `rgba(0, 0, 0, ${cells[idx] / 255})`;
 
       ctx.fillRect(
         col * CELL_SIZE + 1,
