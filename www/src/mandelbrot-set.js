@@ -20,7 +20,7 @@ const boundingBox2 = [
   [-0.6, 0.2],
 ];
 const [[bxMin, byMin], [bxMax, byMax]] = boundingBox1;
-const iterations = 255;
+const iterations = 500;
 
 const universe = Universe.new(
   width,
@@ -40,7 +40,7 @@ const getIndex = (row, column) => {
 
 const drawCells = () => {
   const cellsPtr = universe.cells();
-  const cells = new Uint8Array(memory.buffer, cellsPtr, width * height);
+  const cells = new Uint16Array(memory.buffer, cellsPtr, width * height);
 
   ctx.beginPath();
 

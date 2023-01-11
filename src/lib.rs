@@ -18,8 +18,8 @@ static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
 pub struct Universe {
     width: u32,
     height: u32,
-    iterations: u8,
-    cells: Vec<u8>,
+    iterations: u16,
+    cells: Vec<u16>,
     bx_min: f64,
     by_min: f64,
     bx_max: f64,
@@ -70,7 +70,7 @@ impl Universe {
         (xx, yy)
     }
 
-    fn mandelbrot_value(&self, row: u32, column: u32) -> u8 {
+    fn mandelbrot_value(&self, row: u32, column: u32) -> u16 {
         let scaled_row_column = self.scale_to_bounds(row, column);
         let x0 = scaled_row_column.0;
         let y0 = scaled_row_column.1;
@@ -91,7 +91,7 @@ impl Universe {
     pub fn new(
         width: u32,
         height: u32,
-        iterations: u8,
+        iterations: u16,
         bx_min: f64,
         by_min: f64,
         bx_max: f64,
@@ -121,7 +121,7 @@ impl Universe {
         self.height
     }
 
-    pub fn cells(&self) -> *const u8 {
+    pub fn cells(&self) -> *const u16 {
         self.cells.as_ptr()
     }
 }
