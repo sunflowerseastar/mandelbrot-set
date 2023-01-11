@@ -1,0 +1,37 @@
+{
+  "name": "mandelbrot-set",
+  "version": "0.1.0",
+  "author": "Grant Surlyn <grant@sunflowerseastar.com>",
+  "license": "GPL-3.0",
+  "description": "Mandelbrot set via rust wasm webgl",
+  "main": "src/index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sunflowerseastar/mandelbrot-set"
+  },
+  "scripts": {
+    "build": "webpack --config webpack.config.js",
+    "prettier:check": "prettier --check '**/*.{ts,js,css,json}'",
+    "prettier:write": "prettier --write '**/*.{ts,js,css,json}'",
+    "start": "webpack-dev-server"
+  },
+  "simple-git-hooks": {
+    "pre-commit": "npx lint-staged"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,css,md,json,html}": [
+      "prettier --write"
+    ]
+  },
+  "dependencies": {
+    "wasm-mandelbrot-set": "file:../pkg"
+  },
+  "devDependencies": {
+    "copy-webpack-plugin": "^5.0.0",
+    "lint-staged": "^13.1.0",
+    "simple-git-hooks": "^2.8.1",
+    "webpack": "^4.29.3",
+    "webpack-cli": "^3.1.0",
+    "webpack-dev-server": "^3.1.5"
+  }
+}

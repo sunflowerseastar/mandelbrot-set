@@ -1,0 +1,18 @@
+* Mandelbrot Set
+
+This is a visualization of the [[https://en.wikipedia.org/wiki/Mandelbrot_set][Mandelbrot set]]. The [[https://en.wikipedia.org/wiki/Plotting_algorithms_for_the_Mandelbrot_set][escape time algorithm]] is written in Rust, which is packaged as wasm using [[https://github.com/rustwasm/wasm-pack][wasm-pack]].
+
+#+begin_src sh
+wasm-pack build
+
+cd www
+npm install
+npm start # localhost:8080
+#+end_src
+
+Note that using `yarn` instead of `npm install` makes it such that running ~wasm-pack build~ will not trigger a webpack-dev-server rebuild (and browser refresh).
+
+* References
+
+- https://rustwasm.github.io/docs/book
+  - https://rustwasm.github.io/docs/book/game-of-life/implementing.html
