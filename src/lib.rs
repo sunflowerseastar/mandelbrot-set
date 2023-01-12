@@ -48,6 +48,15 @@ impl Universe {
         (x0, y0)
     }
 
+    fn index_to_xy(&self, width: u32, height: u32, idx: u16) -> (u32, u32) {
+        let idx_u32 = idx as u32;
+        let size = width * height;
+        let x = idx_u32 % width;
+        let y = idx_u32 / width;
+        log!("{width} {height} {idx} {x} {y}");
+        (x, y)
+    }
+
     fn mandelbrot_value(&self, x0: f64, y0: f64, i: usize) -> u16 {
         // if (i == 0 || i == (self.width as usize * self.height as usize) - 1) {
         //     log!("{pixel_x} {pixel_y} {x0} {y0} {i} {x0} {y0}");
@@ -72,7 +81,7 @@ impl Universe {
         for y in 0..self.height {
             for x in 0..self.width {
                 let idx = self.get_index(x, y);
-                let cell = self.cells[idx];
+                // let cell = self.cells[idx];
                 let scaled_xy = self.scale_xy(x, y, idx);
                 let next_cell = self.mandelbrot_value(scaled_xy.0, scaled_xy.1, idx);
                 // log!("{next_cell}");
@@ -82,6 +91,16 @@ impl Universe {
         // log!("len {}", next.len());
         // log!("{next.0}")
         self.cells = next;
+    }
+
+    pub fn tick2(&mut self, zoom: f64, offsetx: i32, offsety: i32, panx: i32, pany: i32) {
+        self.zoom = zoom;
+        self.offsetx = offsetx;
+        self.offsety = offsety;
+        self.panx = panx;
+        self.pany = pany;
+
+        self.tick();
     }
 
     pub fn new(
@@ -94,10 +113,7 @@ impl Universe {
         panx: i32,
         pany: i32,
     ) -> Universe {
-        let cells = (0..width * height)
-            .map(|i| if i % 2 == 0 || i % 7 == 0 { 1 } else { 0 })
-            .collect();
-        let bounds = vec![0.0f64, 0.0, 0.0, 0.0];
+        let cells = (0..width * height).map(|_| 0).collect();
 
         Universe {
             width,
