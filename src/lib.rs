@@ -57,19 +57,18 @@ impl Universe {
         (x, y)
     }
 
+    // https://en.wikipedia.org/wiki/Plotting_algorithms_for_the_Mandelbrot_set#Optimized_escape_time_algorithms
     fn mandelbrot_value(&self, x0: f64, y0: f64, i: usize) -> u16 {
-        // if (i == 0 || i == (self.width as usize * self.height as usize) - 1) {
-        //     log!("{pixel_x} {pixel_y} {x0} {y0} {i} {x0} {y0}");
-        // }
-
-        // determine the escape time of the coordinate
         let mut iteration = 0;
         let mut x = 0.0;
         let mut y = 0.0;
-        while (iteration < self.iterations) && (x * x + y * y <= 4.0) {
-            let xtemp = (x * x) - (y * y) + x0;
-            y = (2.0 * x * y) + y0;
-            x = xtemp;
+        let mut x2 = 0.0;
+        let mut y2 = 0.0;
+        while (iteration < self.iterations) && (x2 + y2 <= 4.0) {
+            y = ((x + x) * y) + y0;
+            x = x2 - y2 + x0;
+            x2 = x * x;
+            y2 = y * y;
             iteration += 1;
         }
 
