@@ -14,24 +14,43 @@ const height = canvas.clientHeight;
 canvas.width = width;
 canvas.height = height;
 
-const boundingBox1 = [
-  [-2.0, -1.12],
-  [0.47, 1.12],
-];
-const boundingBox2 = [
-  [-0.87, 0.0],
-  [-0.67, 0.205],
-];
+// const boundingBox1 = [[-2.0, -1.12], [0.47, 1.12],];
+// const boundingBox2 = [[-0.87, 0.0], [-0.67, 0.205],];
 // const [[bxMin, byMin], [bxMax, byMax]] = boundingBox1;
-const [[bxMin, byMin], [bxMax, byMax]] = boundingBox2;
+// const [[bxMin, byMin], [bxMax, byMax]] = boundingBox2;
+
 // const areColorsReversed = false;
 const iterations = 255;
 
-let zoom = 260;
-let offsetx = -width / 2;
-let offsety = -height / 2;
-let panx = -140;
-let pany = 0;
+let params = new URLSearchParams(document.location.search.substring(1));
+let zoomParam = params.get("zoom");
+let offsetxParam = params.get("offsetx");
+let offsetyParam = params.get("offsety");
+let panxParam = params.get("panx");
+let panyParam = params.get("pany");
+console.log(
+  "zoomParam, offsetxParam, offsetyParam, panxParam, panyParam",
+  zoomParam,
+  offsetxParam,
+  offsetyParam,
+  panxParam,
+  panyParam
+);
+
+let zoom = parseInt(zoomParam) || 260;
+let offsetx = offsetxParam || -height / 2;
+let offsety = offsetyParam || -height / 2;
+const basePanx = -140;
+let panx = panxParam ? parseInt(panxParam) + basePanx : basePanx;
+let pany = parseInt(panyParam) || 0;
+console.log(
+  "zoom, offsetx, offsety, panx, pany",
+  zoom,
+  offsetx,
+  offsety,
+  panx,
+  pany
+);
 
 const universe = Universe.new(
   width,
@@ -41,11 +60,7 @@ const universe = Universe.new(
   offsetx,
   offsety,
   panx,
-  pany,
-  bxMin,
-  byMin,
-  bxMax,
-  byMax
+  pany
 );
 
 const CELL_SIZE = 1; // px
@@ -94,6 +109,19 @@ const zoomFractal = (x, y, factor, zoomin) => {
     pany = (y + offsety + pany) / factor;
   }
 };
+
+const getMousePos = (canvas, e) => {
+  const rect = canvas.getBoundingClientRect();
+  return {
+    x: Math.round(
+      ((e.clientX - rect.left) / (rect.right - rect.left)) * canvas.width
+    ),
+    y: Math.round(
+      ((e.clientY - rect.top) / (rect.bottom - rect.top)) * canvas.height
+    ),
+  };
+};
+
 const onMouseDown = (e) => {
   const pos = getMousePos(canvas, e);
 
@@ -126,27 +154,11 @@ const onMouseDown = (e) => {
   drawCells();
 };
 
-const getMousePos = (canvas, e) => {
-  const rect = canvas.getBoundingClientRect();
-  return {
-    x: Math.round(
-      ((e.clientX - rect.left) / (rect.right - rect.left)) * canvas.width
-    ),
-    y: Math.round(
-      ((e.clientY - rect.top) / (rect.bottom - rect.top)) * canvas.height
-    ),
-  };
-};
-
 const init = () => {
-  // Add mouse events
   canvas.addEventListener("mousedown", onMouseDown);
 
   universe.tick();
   drawCells();
-
-  const cellsPtr = universe.cells();
-  const cells = new Uint16Array(memory.buffer, cellsPtr, width * height);
 
   // const renderLoop = () => {
   //   universe.tick();
